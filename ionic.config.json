@@ -1,0 +1,8 @@
+{
+  "name": "cinemapp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "5d452185"
+}
