@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UserService } from '../api/user.service';
 import { Orden, Pedido, Ticket } from '../models/Interfaces';
@@ -18,7 +18,7 @@ export class ConfirmarOrdenPagePage implements OnInit {
   total:number;
   buttonmessage:string;
   isLogged:boolean = false;
-  constructor(public navCtrl:NavController, private storage:Storage, private userService:UserService) { }
+  constructor(public navCtrl:NavController, private storage:Storage, private userService:UserService, private toastController:ToastController) { }
 
   ngOnInit() {
     this.storage.get("pedido").then(val => val == null ? this.data= [] : this.pedido = val);
@@ -40,7 +40,8 @@ export class ConfirmarOrdenPagePage implements OnInit {
 
     })
     this.userService.isLoggedIn().then(data => {
-      if(data != null){
+      console.log(data);
+      if(data != null && data != undefined){
         this.isLogged = true;
       }
       this.buttonmessage = !this.isLogged? "Accede para confirmar tu orden" : "Realizar pago";
@@ -53,11 +54,15 @@ export class ConfirmarOrdenPagePage implements OnInit {
     if(!this.isLogged){
       this.navCtrl.navigateRoot('login');
     }else{
-      this.ticket.bought = true;
-      this.pedido.map(x => x.bought = true);
-      this.storage.set("tickets", this.ticket);
-      this.storage.set('pedido', this.pedido);
-      this.navCtrl.navigateRoot('tabs/tab2');
+      if(this.cantidad == undefined){
+        this.presentToast("Debes elegir la cantidad de tickets que quieres");
+      }else{
+        this.ticket.bought = true;
+        this.pedido.map(x => x.bought = true);
+        this.storage.set("tickets", this.ticket);
+        this.storage.set('pedido', this.pedido);
+        this.navCtrl.navigateRoot('tabs/tab2');
+      }
     }
   }
   showSelectValue(mySelect){
@@ -87,6 +92,12 @@ export class ConfirmarOrdenPagePage implements OnInit {
     this.total = this.data.map(x => x.pedido.price * x.cantidad).reduce((a,b) => a+b);
    }
    
- 
+   async presentToast(message) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000
+    });
+    toast.present();
+  }
 
 }

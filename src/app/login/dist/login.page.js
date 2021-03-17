@@ -45,18 +45,26 @@ exports.__esModule = true;
 exports.LoginPage = void 0;
 var core_1 = require("@angular/core");
 var LoginPage = /** @class */ (function () {
-    function LoginPage(navCtrl, userService, toastController) {
+    function LoginPage(navCtrl, userService, toastController, storage) {
         this.navCtrl = navCtrl;
         this.userService = userService;
         this.toastController = toastController;
+        this.storage = storage;
     }
     LoginPage.prototype.ngOnInit = function () {
     };
     LoginPage.prototype.login = function () {
         var _this = this;
         this.userService.login(this.email, this.password).then(function (data) {
-            return _this.navCtrl.navigateRoot('confirmar-orden-page');
-        })["catch"](function (error) { return _this.presentToast("Credenciales incorrectas"); });
+            console.log(data.user.email);
+            _this.user = {
+                email: data.user.email,
+                name: data.user.displayName,
+                password: ''
+            };
+            _this.storage.set('user', _this.user);
+            _this.navCtrl.navigateRoot('confirmar-orden-page');
+        })["catch"](function (error) { return console.log(error); });
         ;
     };
     LoginPage.prototype.register = function () {

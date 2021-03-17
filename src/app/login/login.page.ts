@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 import { UserService } from '../api/user.service';
+import { User } from '../models/Interfaces';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +12,26 @@ import { UserService } from '../api/user.service';
 export class LoginPage implements OnInit {
   email:string;
   password:string;
-  constructor(public navCtrl:NavController, private userService:UserService, public toastController: ToastController) { }
+  user:User;
+  constructor(public navCtrl:NavController, private userService:UserService, public toastController: ToastController, private storage:Storage) { }
 
   ngOnInit() {
   }
   login(){
       this.userService.login(this.email, this.password).then(data =>  
-        this.navCtrl.navigateRoot('confirmar-orden-page')
+          {
+            console.log(data.user.email);
+            this.user = {
+              email: data.user.email,
+              name: data.user.displayName,
+              password: ''
+            }
+   
+            this.storage.set('user', this.user);
+            this.navCtrl.navigateRoot('confirmar-orden-page')
+          }
       )
-      .catch(error => this.presentToast("Credenciales incorrectas"));;
+      .catch(error => console.log(error));;
      
   }
   async register(){

@@ -45,10 +45,11 @@ exports.__esModule = true;
 exports.UserService = void 0;
 var core_1 = require("@angular/core");
 var UserService = /** @class */ (function () {
-    function UserService(fireauth, toastController, navCtrl) {
+    function UserService(fireauth, toastController, navCtrl, storage) {
         this.fireauth = fireauth;
         this.toastController = toastController;
         this.navCtrl = navCtrl;
+        this.storage = storage;
     }
     UserService.prototype.registrarUsuario = function (name, email, password) {
         var _this = this;
@@ -81,7 +82,7 @@ var UserService = /** @class */ (function () {
     UserService.prototype.isLoggedIn = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.fireauth.currentUser];
+                return [2 /*return*/, this.storage.get('user')];
             });
         });
     };

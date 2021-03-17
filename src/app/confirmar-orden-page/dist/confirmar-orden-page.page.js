@@ -45,10 +45,11 @@ exports.__esModule = true;
 exports.ConfirmarOrdenPagePage = void 0;
 var core_1 = require("@angular/core");
 var ConfirmarOrdenPagePage = /** @class */ (function () {
-    function ConfirmarOrdenPagePage(navCtrl, storage, userService) {
+    function ConfirmarOrdenPagePage(navCtrl, storage, userService, toastController) {
         this.navCtrl = navCtrl;
         this.storage = storage;
         this.userService = userService;
+        this.toastController = toastController;
         this.data = [];
         this.pedido = [];
         this.ticket = null;
@@ -72,7 +73,8 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
             }
         });
         this.userService.isLoggedIn().then(function (data) {
-            if (data != null) {
+            console.log(data);
+            if (data != null && data != undefined) {
                 _this.isLogged = true;
             }
             _this.buttonmessage = !_this.isLogged ? "Accede para confirmar tu orden" : "Realizar pago";
@@ -85,11 +87,16 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
                     this.navCtrl.navigateRoot('login');
                 }
                 else {
-                    this.ticket.bought = true;
-                    this.pedido.map(function (x) { return x.bought = true; });
-                    this.storage.set("tickets", this.ticket);
-                    this.storage.set('pedido', this.pedido);
-                    this.navCtrl.navigateRoot('tabs/tab2');
+                    if (this.cantidad == undefined) {
+                        this.presentToast("Debes elegir la cantidad de tickets que quieres");
+                    }
+                    else {
+                        this.ticket.bought = true;
+                        this.pedido.map(function (x) { return x.bought = true; });
+                        this.storage.set("tickets", this.ticket);
+                        this.storage.set('pedido', this.pedido);
+                        this.navCtrl.navigateRoot('tabs/tab2');
+                    }
                 }
                 return [2 /*return*/];
             });
@@ -117,6 +124,23 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
             bought: false
         });
         this.total = this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
+    };
+    ConfirmarOrdenPagePage.prototype.presentToast = function (message) {
+        return __awaiter(this, void 0, void 0, function () {
+            var toast;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.toastController.create({
+                            message: message,
+                            duration: 2000
+                        })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     ConfirmarOrdenPagePage = __decorate([
         core_1.Component({
