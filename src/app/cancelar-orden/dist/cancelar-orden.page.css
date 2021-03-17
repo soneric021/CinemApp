@@ -1,0 +1,28 @@
+.card-background-page ion-card {
+  position: relative;
+  text-align: center;
+}
+.card-background-page img {
+  filter: brightness(50%);
+  border-radius: 8px;
+}
+.card-background-page .card-title {
+  position: absolute;
+  bottom: 20%;
+  right: 15%;
+  font-size: 2.5em;
+  width: 100%;
+  color: #fff;
+}
+.card-background-page .card-subtitle {
+  font-size: 1.5em;
+  position: absolute;
+  bottom: 10%;
+  right: 26%;
+  width: 100%;
+  color: #fff;
+}
+
+ion-item {
+  --border-color: var(--ion-color-danger, #f1453d);
+}

@@ -1,0 +1,12 @@
+.displayed {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ion-item {
+  --border-color: var(--ion-color-danger, #f1453d);
+  color: var(--ion-color-danger, #f1453d);
+  font-weight: bold;
+  font-size: large;
+}

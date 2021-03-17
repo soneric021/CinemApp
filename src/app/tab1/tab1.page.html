@@ -1,17 +1,57 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div class="card-background-page">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <ion-card>
+     <img src="assets/kilyan-sockalingum-nW1n9eNHOsc-unsplash.jpg"/>
+      <div class="card-title">CinemApp</div>
+      <div class="card-subtitle">Agenda tus entradas en cualquier momento</div>
+  </ion-card>
+  </div>
+  
+  
+    <ion-item class="box-shadow">
+      <ion-thumbnail slot="start">
+        <ion-img src="assets/008-popcorn.png"></ion-img>
+      </ion-thumbnail>
+      <h1>Agrega un bocao</h1>
+    </ion-item>
+  
+  
+  <div class="card-background-page2">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+      
+  
+          <ion-card (click)="OpenModel(1)">
+            <img src="assets/eiliv-sonas-aceron-iyqj9IKpQK0-unsplash.jpg"/>
+            <div class="card-title"></div>
+            <div class="card-subtitle">Bebidas</div>
+        </ion-card>
+    
+      </ion-col>
+      <ion-col>
+      
+  
+          <ion-card (click)="OpenModel(2)">
+            <img src="assets/charles-deluvio-PvAAYZx-yf8-unsplash.jpg"/>
+            <div class="card-title">
+       
+            </div>
+            <div class="card-subtitle">Picaderas</div>
+        </ion-card>
+     
+      </ion-col>
+    </ion-row>
+    </ion-grid>
+  </div>
+   
+  <ion-list >
+    <ion-item *ngFor="let item of tickets" [ngClass]="item.style" color="danger" style="border-radius: 8px; margin-left: 10px; margin-right: 10px; margin-bottom: 5px;"> 
+      <ion-thumbnail slot="start">
+        <ion-img [src]="item.src"></ion-img>
+      </ion-thumbnail>
+      <ion-label>{{item.title}} <p>{{item.time}}</p></ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

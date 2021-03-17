@@ -6,11 +6,20 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ModalPagePage } from './modal-page/modal-page.page';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  declarations: [AppComponent,ModalPagePage ],
+  entryComponents: [ModalPagePage],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,   AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule, IonicStorageModule.forRoot({
+      name: 'cinemappdb',
+driverOrder: ['indexeddb', 'sqlite', 'websql']
+    })],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,78 @@
+.card-background-page ion-card {
+  position: relative;
+  text-align: center;
+}
+.card-background-page img {
+  filter: brightness(50%);
+  border-radius: 8px;
+}
+.card-background-page .card-title {
+  position: absolute;
+  bottom: 20%;
+  right: 32%;
+  font-size: 2.5em;
+  width: 100%;
+  color: #fff;
+}
+.card-background-page .card-subtitle {
+  font-size: 1.5em;
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  width: 100%;
+  color: #fff;
+}
+
+.card-background-page2 ion-card {
+  position: relative;
+  text-align: center;
+  height: 315px;
+}
+.card-background-page2 img {
+  filter: brightness(50%);
+  border-radius: 8px;
+  height: 100%;
+}
+.card-background-page2 .card-title {
+  position: absolute;
+  bottom: 20%;
+  font-size: 2.5em;
+  width: 100%;
+  color: #fff;
+  border-radius: 50%;
+}
+.card-background-page2 .card-title::before {
+  content: "+";
+  font-weight: bold;
+  position: relative;
+  top: 4px;
+  opacity: 0.7;
+  display: inline-block;
+  width: 40px;
+  padding: 20px;
+  border-radius: 50%;
+  background-color: red;
+}
+.card-background-page2 .card-subtitle {
+  font-size: 2em;
+  position: absolute;
+  bottom: 5%;
+  width: 100%;
+  color: #fff;
+}
+
+.box-shadow {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  border: 1px #888888;
+  padding: 0px;
+  box-shadow: 5px 5px 10px #888888;
+}
+
+.list-item-ticket {
+  color: white;
+  background-color: red;
+  border-radius: 8px;
+}

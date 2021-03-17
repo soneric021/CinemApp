@@ -1,0 +1,36 @@
+<ion-content fullscreen> 
+<ion-row style="margin-top: 100px;">
+
+  <ion-col size="4"></ion-col>
+  <ion-col size="4"> 
+     <ion-img src="assets/029-cinema.png" style="width:70%; margin-left: 20px;"></ion-img>
+    <ion-text color="danger" >
+      <h1 class="title">CinemApp</h1>
+    </ion-text>
+  </ion-col>
+  <ion-col size="4"></ion-col>
+</ion-row>
+
+<ion-item class="ion-margin-horizontal">
+  <ion-label position="stacked">Correo electrónico</ion-label>
+  <ion-input placeholder="" [(ngModel)]="email"></ion-input>
+</ion-item>
+
+<ion-item class="ion-margin-horizontal">
+  <ion-label position="stacked">Contraseña</ion-label>
+  <ion-input type="password" [(ngModel)]="password"></ion-input>
+</ion-item>
+<ion-text color="danger" class="ion-text-center">
+  <h1>¿Olvidaste tu contraseña?</h1>
+</ion-text>
+<ion-button  expand="block" color="danger" class="ion-margin-horizontal ion-margin-top"  size="large" (click)="login()">
+ Iniciar sesión
+</ion-button>
+
+
+</ion-content>
+<ion-footer class="ion-margin-bottom" >
+  <ion-text color="danger"  class="ion-text-center " (click)="register()">
+    <h1>No tienes cuenta, registrate</h1>
+  </ion-text>
+</ion-footer>

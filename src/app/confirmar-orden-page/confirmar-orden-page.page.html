@@ -1,0 +1,59 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="danger" defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<div class="card-background-page">
+
+  <ion-card>
+    <img src="assets/hipertextual-ver-avengers-endgame-4k-2019810743.jpeg"/>
+    <div class="card-title">Avengers End-Game</div>
+    <div class="card-subtitle">4:00 P.M. - 7:00 P.M.</div>
+</ion-card>
+
+</div>
+<ion-item class="ion-margin-horizontal" >
+  <ion-label color="medium"  style="font-size: x-large;">No. de tickets</ion-label>
+  <ion-select [(ngModel)]="mySelect" (ionChange)="showSelectValue(mySelect)">
+    <ion-select-option value="1">1</ion-select-option>
+    <ion-select-option value="2">2</ion-select-option>
+    <ion-select-option value="3">3</ion-select-option>
+    <ion-select-option value="4">4</ion-select-option>
+    <ion-select-option value="5">5</ion-select-option>
+    <ion-select-option value="6">6</ion-select-option>
+    <ion-select-option value="7">7</ion-select-option>
+    <ion-select-option value="8">8</ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-text color="danger" class="ion-margin-start">
+  <h1>Detalles de la orden:</h1>
+</ion-text>
+
+<ion-list  lines="none">
+  <ion-item  *ngFor="let item of data" [ngClass]="item.style" style="font-size: x-large; font-weight: 200;">
+    <ion-label color="medium" >
+      {{item.pedido.name}}
+    </ion-label>
+    <div item-content style="color: #f1453d;" >
+      $ {{item.pedido.price * item.cantidad}}
+    </div>
+  </ion-item>
+</ion-list>
+
+
+<ion-item class="ion-margin-horizontal" >
+  <ion-label color="medium"  style="font-size: x-large;">Metodo de pago</ion-label>
+  <ion-select>
+    <ion-select-option value="1">Tarjeta</ion-select-option>
+    <ion-select-option value="2">Efectivo</ion-select-option>
+  </ion-select>
+</ion-item>
+<ion-text color="danger" class="ion-text-center" >
+  <h1 style="font-size: xx-large;">${{total}} DOP.</h1>
+</ion-text>
+<ion-button expand="block" color="danger" (click)="goToLogin()" class="ion-margin-horizontal ion-margin-bottom">
+  {{buttonmessage}}
+</ion-button>

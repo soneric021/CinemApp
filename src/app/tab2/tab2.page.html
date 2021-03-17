@@ -1,17 +1,8 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 2 page"></app-explore-container>
-</ion-content>
+<ion-list >
+  <ion-item *ngFor="let item of tickets" (click)="goToCancelar()" [ngClass]="item.style" color="danger" style="border-radius: 8px; margin-left: 10px; margin-right: 10px; margin-bottom: 5px;"> 
+    <ion-thumbnail slot="start">
+      <ion-img src="../assets/003-tickets.png"></ion-img>
+    </ion-thumbnail>
+    <ion-label>{{item.displayName}} <p>{{item.time}}</p></ion-label>
+  </ion-item>
+</ion-list>

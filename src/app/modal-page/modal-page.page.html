@@ -1,0 +1,62 @@
+<ion-content fullscreen>
+  <ion-text color="medium" class="ion-text-right ">
+    <h1 class="ion-margin-end" >Cerrar</h1>
+  </ion-text>
+  <ion-list lines="none">
+    <ion-item > 
+      <ion-thumbnail slot="start">
+        <ion-img src="assets/008-popcorn.png"></ion-img>
+      </ion-thumbnail>
+     <h1>Agrega un bocao</h1>
+    </ion-item>
+  </ion-list>
+ 
+ <ion-grid fixed>
+  <ion-row>
+    <ion-col size="5">
+      <ion-item>
+  
+        <ion-select  [(ngModel)]="mySelect" (ionChange)="showSelectValue(mySelect)">
+          <ion-select-option  *ngFor="let item of data"  [value]="item" >{{item.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col >
+      <ion-col size="3" >
+        <ion-item >
+          <ion-label>#</ion-label>
+          <ion-input placeholder="1" type="text"  [(ngModel)]="cantidad"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button (click)="agregarOrden()" color="danger" expand="block"  style="border-radius: 8px;" class="ion-padding-horizontal">
+         +
+        </ion-button>
+     </ion-col>
+ 
+  </ion-row>
+ </ion-grid>
+
+
+<ion-grid>
+  <ion-row *ngFor="let item of datashowed" >
+    <ion-col size="8">
+     <ion-list lines="none">
+      <ion-item color="danger" style="border-radius: 8px; margin-top: 4px;">
+        <ion-thumbnail slot="start">
+          <ion-img src="assets/003-tickets.png"></ion-img>
+        </ion-thumbnail>
+        <ion-label>{{item.pedido.name}} <p>${{item.pedido.price * item.cantidad}} DOP.</p></ion-label>
+      </ion-item>
+     </ion-list>
+    </ion-col>
+    <ion-col size="4">
+     <ion-button color="danger" expand="block"  style="border-radius: 8px;height: 60px; " class="ion-padding-horizontal" (click)="deleteItem(item)">
+      <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>
+<ion-footer>
+  <ion-button expand="block" color="danger" size="large" class="ion-margin-horizontal ion-margin-bottom" style="border-radius: 8px" (click)="confirmarOrden()">Confirmar orden</ion-button>
+</ion-footer>
