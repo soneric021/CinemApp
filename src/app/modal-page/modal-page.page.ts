@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UserService } from '../api/user.service';
 import { ConfirmarOrdenPagePage } from '../confirmar-orden-page/confirmar-orden-page.page';
@@ -11,8 +11,8 @@ import { bebidas, comidas, Orden, Pedido } from '../models/Interfaces';
 })
 
 export class ModalPagePage implements OnInit {
-  pedido:Pedido;
-  cantidad:number;
+  pedido:Pedido = null;
+  cantidad:number = null;
 
   @Input() modo:number;
   data = [];
@@ -20,7 +20,7 @@ export class ModalPagePage implements OnInit {
   datashowed:Orden[] = [];
   
  
-  constructor(public navCtrl: NavController, private storage:Storage, private modalCtrl:ModalController) { }
+  constructor(public navCtrl: NavController, private storage:Storage, private modalCtrl:ModalController, private toastController:ToastController) { }
   
   ngOnInit() {
     this.storage.get("pedido").then(val => {
@@ -40,18 +40,22 @@ export class ModalPagePage implements OnInit {
     }else{
       this.data.push(...comidas);
     }
-    
+  
   }
   agregarOrden(){
-      this.dataselected.push({
-        pedido:this.pedido,
-        cantidad: this.cantidad, 
-        bought:false
-      })
-      this.storage.set("pedido", this.dataselected);
-      this.datashowed = this.dataselected.filter(x => x.bought == false);
-      console.log(this.data);
-      console.log(this.dataselected);
+      if(this.cantidad != null && this.pedido != null){
+        this.dataselected.push({
+          pedido:this.pedido,
+          cantidad: this.cantidad, 
+          bought:false
+        })
+        this.storage.set("pedido", this.dataselected);
+        this.datashowed = this.dataselected.filter(x => x.bought == false);
+        console.log(this.data);
+        console.log(this.dataselected);
+      }else{
+        this.presentToast("Tienes un campo vacio");
+      }
   }
   async confirmarOrden(){
     this.navCtrl.navigateRoot('confirmar-orden-page');
@@ -78,6 +82,12 @@ export class ModalPagePage implements OnInit {
         return ele != value; 
     });
 }
-
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000
+    });
+    toast.present();
+  }
 
 }

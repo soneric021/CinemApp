@@ -46,10 +46,13 @@ exports.ModalPagePage = void 0;
 var core_1 = require("@angular/core");
 var Interfaces_1 = require("../models/Interfaces");
 var ModalPagePage = /** @class */ (function () {
-    function ModalPagePage(navCtrl, storage, modalCtrl) {
+    function ModalPagePage(navCtrl, storage, modalCtrl, toastController) {
         this.navCtrl = navCtrl;
         this.storage = storage;
         this.modalCtrl = modalCtrl;
+        this.toastController = toastController;
+        this.pedido = null;
+        this.cantidad = null;
         this.data = [];
         this.dataselected = [];
         this.datashowed = [];
@@ -76,15 +79,20 @@ var ModalPagePage = /** @class */ (function () {
         }
     };
     ModalPagePage.prototype.agregarOrden = function () {
-        this.dataselected.push({
-            pedido: this.pedido,
-            cantidad: this.cantidad,
-            bought: false
-        });
-        this.storage.set("pedido", this.dataselected);
-        this.datashowed = this.dataselected.filter(function (x) { return x.bought == false; });
-        console.log(this.data);
-        console.log(this.dataselected);
+        if (this.cantidad != null && this.pedido != null) {
+            this.dataselected.push({
+                pedido: this.pedido,
+                cantidad: this.cantidad,
+                bought: false
+            });
+            this.storage.set("pedido", this.dataselected);
+            this.datashowed = this.dataselected.filter(function (x) { return x.bought == false; });
+            console.log(this.data);
+            console.log(this.dataselected);
+        }
+        else {
+            this.presentToast("Tienes un campo vacio");
+        }
     };
     ModalPagePage.prototype.confirmarOrden = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -113,6 +121,23 @@ var ModalPagePage = /** @class */ (function () {
     ModalPagePage.prototype.arrayRemove = function (arr, value) {
         return arr.filter(function (ele) {
             return ele != value;
+        });
+    };
+    ModalPagePage.prototype.presentToast = function (message) {
+        return __awaiter(this, void 0, void 0, function () {
+            var toast;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.toastController.create({
+                            message: message,
+                            duration: 2000
+                        })];
+                    case 1:
+                        toast = _a.sent();
+                        toast.present();
+                        return [2 /*return*/];
+                }
+            });
         });
     };
     __decorate([

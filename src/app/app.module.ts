@@ -13,9 +13,9 @@ import { environment } from 'src/environments/environment';
 import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
-  declarations: [AppComponent,ModalPagePage ],
+  declarations: [AppComponent, ModalPagePage],
   entryComponents: [ModalPagePage],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,   AngularFireModule.initializeApp(environment.firebaseConfig),
+  imports: [BrowserModule,  IonicModule.forRoot(), AppRoutingModule,   AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule, IonicStorageModule.forRoot({
       name: 'cinemappdb',
 driverOrder: ['indexeddb', 'sqlite', 'websql']

@@ -16,11 +16,13 @@ var CancelarOrdenPage = /** @class */ (function () {
     }
     CancelarOrdenPage.prototype.ngOnInit = function () {
         var _this = this;
-        this.storage.get('pedido').then(function (val) { return _this.data = val; });
+        this.storage.get('pedido').then(function (val) { return _this.data = val.filter(function (x) { return x.bought == true; }); });
         this.storage.get('tickets').then(function (val) {
+            console.log(_this.data);
             _this.data.push({
                 pedido: val,
-                cantidad: val.cantidad
+                cantidad: val.cantidad,
+                bought: val.bought
             });
             _this.cantidad = val.cantidad;
             _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
