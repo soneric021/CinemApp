@@ -21,7 +21,8 @@ export class CancelarOrdenPage implements OnInit {
       this.data.push(  {
         pedido:val,
         cantidad:val.cantidad,
-        bought:val.bought
+        bought:val.bought,
+        paymentType:val.paymentType
       });
       this.cantidad = val.cantidad;
       this.total = this.data.map(x => x.pedido.price * x.cantidad).reduce((a,b) => a+b);

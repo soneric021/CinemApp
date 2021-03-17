@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
             this.navCtrl.navigateRoot('confirmar-orden-page')
           }
       )
-      .catch(error => console.log(error));;
+      .catch(error => this.presentToast("Credenciales incorrectas"));;
      
   }
   async register(){

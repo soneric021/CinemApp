@@ -1,7 +1,8 @@
 export  interface Orden{
     pedido:Pedido,
     cantidad:number,
-    bought:boolean
+    bought:boolean,
+    paymentType?:number
   }
   
 export interface Pedido{

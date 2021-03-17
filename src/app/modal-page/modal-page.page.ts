@@ -56,6 +56,7 @@ export class ModalPagePage implements OnInit {
       }else{
         this.presentToast("Tienes un campo vacio");
       }
+    
   }
   async confirmarOrden(){
     this.navCtrl.navigateRoot('confirmar-orden-page');

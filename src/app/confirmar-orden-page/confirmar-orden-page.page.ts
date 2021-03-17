@@ -13,9 +13,11 @@ export class ConfirmarOrdenPagePage implements OnInit {
   data:Orden[] = [];
   pedido:Orden[] = [];
   mySelect;
+  mySelect2;
   cantidad:number;
   ticket:Ticket = null;
   total:number;
+  paymentType:number;
   buttonmessage:string;
   isLogged:boolean = false;
   constructor(public navCtrl:NavController, private storage:Storage, private userService:UserService, private toastController:ToastController) { }
@@ -26,12 +28,14 @@ export class ConfirmarOrdenPagePage implements OnInit {
       this.data = this.pedido.filter(x => x.bought ==false);
       if(val != null && val != undefined){
         this.ticket = val;
+        this.cantidad = val.cantidad;
        if(val.bought == false){
         this.data.push(
           {
             pedido:val,
             cantidad:val.cantidad,
-            bought:val.bought
+            bought:val.bought,
+            paymentType: val.paymentType
           }
         )
        }
@@ -56,6 +60,8 @@ export class ConfirmarOrdenPagePage implements OnInit {
     }else{
       if(this.cantidad == undefined){
         this.presentToast("Debes elegir la cantidad de tickets que quieres");
+      }else if(this.paymentType == undefined){
+        this.presentToast("Debes elegir un metodo de pago");
       }else{
         this.ticket.bought = true;
         this.pedido.map(x => x.bought = true);
@@ -87,9 +93,14 @@ export class ConfirmarOrdenPagePage implements OnInit {
     this.data.push({
       pedido:this.ticket,
       cantidad:this.cantidad,
-      bought:false
+      bought:false,
+      paymentType: this.paymentType
     })
     this.total = this.data.map(x => x.pedido.price * x.cantidad).reduce((a,b) => a+b);
+   }
+   showSelectValue2(mySelect2){
+    console.log(mySelect2);
+    this.paymentType = mySelect2;
    }
    
    async presentToast(message) {

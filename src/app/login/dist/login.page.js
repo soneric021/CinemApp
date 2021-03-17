@@ -64,7 +64,7 @@ var LoginPage = /** @class */ (function () {
             };
             _this.storage.set('user', _this.user);
             _this.navCtrl.navigateRoot('confirmar-orden-page');
-        })["catch"](function (error) { return console.log(error); });
+        })["catch"](function (error) { return _this.presentToast("Credenciales incorrectas"); });
         ;
     };
     LoginPage.prototype.register = function () {

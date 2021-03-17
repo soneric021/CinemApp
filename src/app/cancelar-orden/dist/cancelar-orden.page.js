@@ -22,7 +22,8 @@ var CancelarOrdenPage = /** @class */ (function () {
             _this.data.push({
                 pedido: val,
                 cantidad: val.cantidad,
-                bought: val.bought
+                bought: val.bought,
+                paymentType: val.paymentType
             });
             _this.cantidad = val.cantidad;
             _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });

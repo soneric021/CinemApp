@@ -62,11 +62,13 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
             _this.data = _this.pedido.filter(function (x) { return x.bought == false; });
             if (val != null && val != undefined) {
                 _this.ticket = val;
+                _this.cantidad = val.cantidad;
                 if (val.bought == false) {
                     _this.data.push({
                         pedido: val,
                         cantidad: val.cantidad,
-                        bought: val.bought
+                        bought: val.bought,
+                        paymentType: val.paymentType
                     });
                 }
                 _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
@@ -89,6 +91,9 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
                 else {
                     if (this.cantidad == undefined) {
                         this.presentToast("Debes elegir la cantidad de tickets que quieres");
+                    }
+                    else if (this.paymentType == undefined) {
+                        this.presentToast("Debes elegir un metodo de pago");
                     }
                     else {
                         this.ticket.bought = true;
@@ -121,9 +126,14 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
         this.data.push({
             pedido: this.ticket,
             cantidad: this.cantidad,
-            bought: false
+            bought: false,
+            paymentType: this.paymentType
         });
         this.total = this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
+    };
+    ConfirmarOrdenPagePage.prototype.showSelectValue2 = function (mySelect2) {
+        console.log(mySelect2);
+        this.paymentType = mySelect2;
     };
     ConfirmarOrdenPagePage.prototype.presentToast = function (message) {
         return __awaiter(this, void 0, void 0, function () {

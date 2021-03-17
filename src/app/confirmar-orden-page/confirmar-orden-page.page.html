@@ -33,11 +33,11 @@
 </ion-text>
 
 <ion-list  lines="none">
-  <ion-item  *ngFor="let item of data" [ngClass]="item.style" style="font-size: x-large; font-weight: 200;">
+  <ion-item  *ngFor="let item of data"  style="font-size: x-large; font-weight: 200;">
     <ion-label color="medium" >
       {{item.pedido.name}}
     </ion-label>
-    <div item-content style="color: #f1453d;" >
+    <div item-content style="color: #f1453d;"  >
       $ {{item.pedido.price * item.cantidad}}
     </div>
   </ion-item>
@@ -46,7 +46,7 @@
 
 <ion-item class="ion-margin-horizontal" >
   <ion-label color="medium"  style="font-size: x-large;">Metodo de pago</ion-label>
-  <ion-select>
+  <ion-select [(ngModel)]="mySelect2" (ionChange)="showSelectValue2(mySelect2)">
     <ion-select-option value="1">Tarjeta</ion-select-option>
     <ion-select-option value="2">Efectivo</ion-select-option>
   </ion-select>
