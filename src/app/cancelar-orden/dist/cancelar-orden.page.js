@@ -9,29 +9,39 @@ exports.__esModule = true;
 exports.CancelarOrdenPage = void 0;
 var core_1 = require("@angular/core");
 var CancelarOrdenPage = /** @class */ (function () {
-    function CancelarOrdenPage(storage, navCtrl) {
+    function CancelarOrdenPage(storage, navCtrl, firedatabase, fireauth) {
         this.storage = storage;
         this.navCtrl = navCtrl;
+        this.firedatabase = firedatabase;
+        this.fireauth = fireauth;
         this.data = [];
     }
     CancelarOrdenPage.prototype.ngOnInit = function () {
         var _this = this;
-        this.storage.get('pedido').then(function (val) { return _this.data = val.filter(function (x) { return x.bought == true; }); });
-        this.storage.get('tickets').then(function (val) {
-            console.log(_this.data);
-            _this.data.push({
-                pedido: val,
-                cantidad: val.cantidad,
-                bought: val.bought,
-                paymentType: val.paymentType
-            });
-            _this.cantidad = val.cantidad;
-            _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
+        this.fireauth.currentUser.then(function (user) {
+            if (user) {
+                _this.uid = user.uid;
+                _this.firedatabase.database.ref('users/' + user.uid)
+                    .on('value', function (val) {
+                    console.log(val.val());
+                    if (val.exists()) {
+                        _this.data = val.val().orden.filter(function (x) { return x.bought == true; });
+                        _this.data.push({
+                            pedido: val.val().ticket,
+                            cantidad: val.val().ticket.cantidad,
+                            bought: val.val().ticket.bought,
+                            paymentType: val.val().ticket.paymentType
+                        });
+                        _this.cantidad = val.val().ticket.cantidad;
+                        _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
+                    }
+                });
+            }
         });
     };
     CancelarOrdenPage.prototype.cancelarTickets = function () {
-        this.storage.set('pedido', []);
-        this.storage.set('tickets', {});
+        this.firedatabase.database.ref('users/' + this.uid).child('ticket').set({});
+        this.firedatabase.database.ref('users/' + this.uid).child('orden').set([]);
         this.navCtrl.navigateBack('tabs/tab2');
     };
     CancelarOrdenPage = __decorate([

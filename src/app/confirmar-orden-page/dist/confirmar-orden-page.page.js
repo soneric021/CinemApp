@@ -45,42 +45,56 @@ exports.__esModule = true;
 exports.ConfirmarOrdenPagePage = void 0;
 var core_1 = require("@angular/core");
 var ConfirmarOrdenPagePage = /** @class */ (function () {
-    function ConfirmarOrdenPagePage(navCtrl, storage, userService, toastController) {
+    function ConfirmarOrdenPagePage(navCtrl, fireauth, userService, toastController, firedatabase) {
         this.navCtrl = navCtrl;
-        this.storage = storage;
+        this.fireauth = fireauth;
         this.userService = userService;
         this.toastController = toastController;
+        this.firedatabase = firedatabase;
         this.data = [];
         this.pedido = [];
+        this.ticketOrden = null;
         this.ticket = null;
         this.isLogged = false;
     }
     ConfirmarOrdenPagePage.prototype.ngOnInit = function () {
         var _this = this;
-        this.storage.get("pedido").then(function (val) { return val == null ? _this.data = [] : _this.pedido = val; });
-        this.storage.get("tickets").then(function (val) {
-            _this.data = _this.pedido.filter(function (x) { return x.bought == false; });
-            if (val != null && val != undefined) {
-                _this.ticket = val;
-                _this.cantidad = val.cantidad;
-                if (val.bought == false) {
-                    _this.data.push({
-                        pedido: val,
-                        cantidad: val.cantidad,
-                        bought: val.bought,
-                        paymentType: val.paymentType
-                    });
-                }
+        this.firedatabase.database.ref('orden').on('value', function (data) {
+            if (!data.exists()) {
+                _this.data = [];
+            }
+            else {
+                _this.pedido = data.val();
+                _this.data = _this.pedido.filter(function (x) { return x.bought == false; });
                 _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
             }
         });
-        this.userService.isLoggedIn().then(function (data) {
-            console.log(data);
-            if (data != null && data != undefined) {
-                _this.isLogged = true;
+        this.firedatabase.database.ref('ticket').on('value', function (data) {
+            if (data.exists()) {
+                if (_this.ticketOrden != null) {
+                    _this.data.pop();
+                }
+                _this.ticket = data.val();
+                _this.ticketOrden = {
+                    pedido: data.val(),
+                    cantidad: data.val().cantidad,
+                    bought: data.val().bought,
+                    paymentType: data.val().paymentType
+                };
+                _this.cantidad = data.val().cantidad;
+                _this.data.push(_this.ticketOrden);
+                _this.total = _this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
             }
-            _this.buttonmessage = !_this.isLogged ? "Accede para confirmar tu orden" : "Realizar pago";
         });
+        this.fireauth.currentUser.then(function (data) {
+            console.log(data);
+            if (data) {
+                _this.uid = data.uid;
+                _this.isLogged = true;
+                _this.buttonmessage = !_this.isLogged ? "Accede para confirmar tu orden" : "Realizar pago";
+            }
+        })["catch"](function (error) { return console.log(error); });
+        this.buttonmessage = !this.isLogged ? "Accede para confirmar tu orden" : "Realizar pago";
     };
     ConfirmarOrdenPagePage.prototype.goToLogin = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -98,8 +112,10 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
                     else {
                         this.ticket.bought = true;
                         this.pedido.map(function (x) { return x.bought = true; });
-                        this.storage.set("tickets", this.ticket);
-                        this.storage.set('pedido', this.pedido);
+                        this.firedatabase.database.ref('ticket').set({});
+                        this.firedatabase.database.ref('orden').set([]);
+                        this.firedatabase.database.ref('users/' + this.uid).child('ticket').set(this.ticket);
+                        this.firedatabase.database.ref('users/' + this.uid).child('orden').set(this.pedido);
                         this.navCtrl.navigateRoot('tabs/tab2');
                     }
                 }
@@ -108,11 +124,7 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
         });
     };
     ConfirmarOrdenPagePage.prototype.showSelectValue = function (mySelect) {
-        console.log(mySelect);
         this.cantidad = mySelect;
-        if (this.ticket != null) {
-            this.data.pop();
-        }
         this.ticket = {
             id: 1,
             displayName: 'Avengers End-Game',
@@ -122,13 +134,8 @@ var ConfirmarOrdenPagePage = /** @class */ (function () {
             cantidad: this.cantidad,
             bought: false
         };
-        this.storage.set("tickets", this.ticket);
-        this.data.push({
-            pedido: this.ticket,
-            cantidad: this.cantidad,
-            bought: false,
-            paymentType: this.paymentType
-        });
+        this.firedatabase.database.ref('ticket').set(this.ticket);
+        this.ticket = null;
         this.total = this.data.map(function (x) { return x.pedido.price * x.cantidad; }).reduce(function (a, b) { return a + b; });
     };
     ConfirmarOrdenPagePage.prototype.showSelectValue2 = function (mySelect2) {

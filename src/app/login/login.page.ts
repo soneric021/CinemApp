@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
               password: ''
             }
    
-            this.storage.set('user', this.user);
+            this.userService.writeUserData(data.user.uid,data.user.displayName, data.user.email);
             this.navCtrl.navigateRoot('confirmar-orden-page')
           }
       )

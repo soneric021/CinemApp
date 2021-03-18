@@ -9,6 +9,8 @@ import { AppComponent } from './app.component';
 import { ModalPagePage } from './modal-page/modal-page.page';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { IonicStorageModule } from '@ionic/storage';
 
@@ -16,7 +18,7 @@ import { IonicStorageModule } from '@ionic/storage';
   declarations: [AppComponent, ModalPagePage],
   entryComponents: [ModalPagePage],
   imports: [BrowserModule,  IonicModule.forRoot(), AppRoutingModule,   AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule, IonicStorageModule.forRoot({
+    AngularFireAuthModule,AngularFireDatabaseModule, IonicStorageModule.forRoot({
       name: 'cinemappdb',
 driverOrder: ['indexeddb', 'sqlite', 'websql']
     })],

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UserService } from '../api/user.service';
@@ -20,27 +21,36 @@ export class ModalPagePage implements OnInit {
   datashowed:Orden[] = [];
   
  
-  constructor(public navCtrl: NavController, private storage:Storage, private modalCtrl:ModalController, private toastController:ToastController) { }
+  constructor(public navCtrl: NavController, private storage:Storage, private modalCtrl:ModalController, private toastController:ToastController, private firebaseDatabase:AngularFireDatabase) { }
   
   ngOnInit() {
-    this.storage.get("pedido").then(val => {
-      if(val == null || val == undefined){
+    // this.storage.get("pedido").then(val => {
+    //   if(val == null || val == undefined){
+        
+    //   } else{
+    //     this.dataselected = val;
+    //     console.log(this.dataselected);
+      
+    //     this.datashowed = this.dataselected.filter(x => x.bought == false);
+    //     console.log(this.datashowed);
+    //   }
+    // });
+    this.firebaseDatabase.database.ref('orden').on('value', val =>{
+      if(!val.exists()){
         this.dataselected = [];
-      } else{
-        this.dataselected = val;
-        console.log(this.dataselected);
+      }else{
+        this.dataselected = val.val();
       
         this.datashowed = this.dataselected.filter(x => x.bought == false);
-        console.log(this.datashowed);
       }
-    });
+    })
   
     if(this.modo == 1){
       this.data.push(...bebidas);
     }else{
       this.data.push(...comidas);
     }
-  
+
   }
   agregarOrden(){
       if(this.cantidad != null && this.pedido != null){
@@ -49,7 +59,8 @@ export class ModalPagePage implements OnInit {
           cantidad: this.cantidad, 
           bought:false
         })
-        this.storage.set("pedido", this.dataselected);
+        //this.storage.set("pedido", this.dataselected);
+        this.firebaseDatabase.database.ref('orden').set(this.dataselected);
         this.datashowed = this.dataselected.filter(x => x.bought == false);
         console.log(this.data);
         console.log(this.dataselected);
@@ -68,7 +79,8 @@ export class ModalPagePage implements OnInit {
   deleteItem(value){
     this.datashowed = this.arrayRemove(this.datashowed, value);
     this.dataselected = this.arrayRemove(this.dataselected, value);
-    this.storage.set("pedido", this.dataselected);
+    this.firebaseDatabase.database.ref('orden').set(this.dataselected);
+    //this.storage.set("pedido", this.dataselected);
   }
   dismiss() {
     // using the injected ModalController this page

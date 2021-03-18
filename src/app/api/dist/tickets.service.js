@@ -42,69 +42,58 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.UserService = void 0;
+exports.TicketsService = void 0;
 var core_1 = require("@angular/core");
-var UserService = /** @class */ (function () {
-    function UserService(fireauth, toastController, navCtrl, storage, firedatabase) {
-        this.fireauth = fireauth;
-        this.toastController = toastController;
-        this.navCtrl = navCtrl;
-        this.storage = storage;
+var TicketsService = /** @class */ (function () {
+    function TicketsService(firedatabase) {
         this.firedatabase = firedatabase;
     }
-    UserService.prototype.registrarUsuario = function (name, email, password) {
-        var _this = this;
-        this.fireauth.createUserWithEmailAndPassword(email, password).then(function (userInfo) {
-            userInfo.user.updateProfile({
-                displayName: name
-            }).then(function (res) { return _this.presentToast("Usuario registrado satisfactoriamente"); })["catch"](function (error) { return console.log(error); });
-        })["catch"](function (error) { return console.log(error); });
-    };
-    UserService.prototype.writeUserData = function (userId, name, email) {
-        this.firedatabase.database.ref('users/' + userId).set({
-            username: name,
-            email: email
-        });
-    };
-    UserService.prototype.login = function (email, password) {
-        return this.fireauth.signInWithEmailAndPassword(email, password);
-    };
-    UserService.prototype.presentToast = function (message) {
-        return __awaiter(this, void 0, void 0, function () {
-            var toast;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.toastController.create({
-                            message: message,
-                            duration: 2000
-                        })];
-                    case 1:
-                        toast = _a.sent();
-                        toast.present();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    UserService.prototype.isLoggedIn = function () {
+    TicketsService.prototype.saveTicket = function (ticket) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                this.firedatabase.database.ref('ticket').set(ticket);
                 return [2 /*return*/];
             });
         });
     };
-    UserService.prototype.logOut = function () {
+    TicketsService.prototype.saveOrdenes = function (orden) {
         return __awaiter(this, void 0, void 0, function () {
+            var ordenes;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.fireauth.currentUser];
+                ordenes = this.firedatabase.database.ref('orden');
+                ordenes.on('value', function (snapshot) {
+                    var data = snapshot.val();
+                    data.push(orden);
+                    ordenes.set(data);
+                });
+                return [2 /*return*/];
             });
         });
     };
-    UserService = __decorate([
+    TicketsService.prototype.actualizarPedidos = function (orden) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.firedatabase.database.ref('orden').set(orden);
+                return [2 /*return*/];
+            });
+        });
+    };
+    TicketsService.prototype.getOrdenes = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.firedatabase.database.ref('orden').on('value', function (data) {
+                    if (data.exists) {
+                    }
+                });
+                return [2 /*return*/];
+            });
+        });
+    };
+    TicketsService = __decorate([
         core_1.Injectable({
             providedIn: 'root'
         })
-    ], UserService);
-    return UserService;
+    ], TicketsService);
+    return TicketsService;
 }());
-exports.UserService = UserService;
+exports.TicketsService = TicketsService;

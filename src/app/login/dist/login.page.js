@@ -62,7 +62,7 @@ var LoginPage = /** @class */ (function () {
                 name: data.user.displayName,
                 password: ''
             };
-            _this.storage.set('user', _this.user);
+            _this.userService.writeUserData(data.user.uid, data.user.displayName, data.user.email);
             _this.navCtrl.navigateRoot('confirmar-orden-page');
         })["catch"](function (error) { return _this.presentToast("Credenciales incorrectas"); });
         ;

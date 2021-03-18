@@ -9,14 +9,33 @@ exports.__esModule = true;
 exports.Tab2Page = void 0;
 var core_1 = require("@angular/core");
 var Tab2Page = /** @class */ (function () {
-    function Tab2Page(storage, navCtrl) {
+    function Tab2Page(storage, navCtrl, firedatabase, fireauth) {
         this.storage = storage;
         this.navCtrl = navCtrl;
+        this.firedatabase = firedatabase;
+        this.fireauth = fireauth;
         this.tickets = [];
     }
     Tab2Page.prototype.ngOnInit = function () {
         var _this = this;
-        this.storage.get('tickets').then(function (val) { return val == null || val == undefined ? _this.tickets : _this.tickets = _this.fillArray(val, val.cantidad); });
+        this.fireauth.currentUser.then(function (user) {
+            console.log(user);
+            console.log(user.uid);
+            if (user) {
+                _this.firedatabase.database.ref('users/' + user.uid).child('ticket')
+                    .on('value', function (val) {
+                    console.log(val.val());
+                    if (val.exists()) {
+                        console.log(val.val());
+                        _this.tickets = _this.fillArray(val.val(), val.val().cantidad);
+                    }
+                    else {
+                        console.log("no hay usuario logueado");
+                    }
+                });
+            }
+        });
+        // this.storage.get('tickets').then(val => val == null || val == undefined ? this.tickets : this.tickets = this.fillArray(val, val.cantidad) );
         if (this.tickets.length == 0) {
             this.message = "No hay Tickets comprados todavia";
         }

@@ -9,6 +9,7 @@ exports.environment = {
     firebaseConfig: {
         apiKey: "AIzaSyCGHnAnZ_lBQ5TDM4XjUv8Cl2D4VXLqfwA",
         authDomain: "cinemapp-3b582.firebaseapp.com",
+        databaseURL: "https://cinemapp-3b582-default-rtdb.firebaseio.com",
         projectId: "cinemapp-3b582",
         storageBucket: "cinemapp-3b582.appspot.com",
         messagingSenderId: "143663018263",

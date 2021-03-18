@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UserService } from '../api/user.service';
@@ -12,44 +14,57 @@ import { Orden, Pedido, Ticket } from '../models/Interfaces';
 export class ConfirmarOrdenPagePage implements OnInit {
   data:Orden[] = [];
   pedido:Orden[] = [];
+  ticketOrden:Orden = null;
   mySelect;
   mySelect2;
   cantidad:number;
   ticket:Ticket = null;
   total:number;
   paymentType:number;
+  uid;
   buttonmessage:string;
   isLogged:boolean = false;
-  constructor(public navCtrl:NavController, private storage:Storage, private userService:UserService, private toastController:ToastController) { }
+  constructor(public navCtrl:NavController,  private fireauth: AngularFireAuth, private userService:UserService, private toastController:ToastController, private firedatabase:AngularFireDatabase) { }
 
   ngOnInit() {
-    this.storage.get("pedido").then(val => val == null ? this.data= [] : this.pedido = val);
-    this.storage.get("tickets").then(val => {
-      this.data = this.pedido.filter(x => x.bought ==false);
-      if(val != null && val != undefined){
-        this.ticket = val;
-        this.cantidad = val.cantidad;
-       if(val.bought == false){
-        this.data.push(
-          {
-            pedido:val,
-            cantidad:val.cantidad,
-            bought:val.bought,
-            paymentType: val.paymentType
-          }
-        )
-       }
+    this.firedatabase.database.ref('orden').on('value', data =>{
+      if(!data.exists()){
+        this.data= [];
+      }else{
+        this.pedido = data.val(); 
+        this.data = this.pedido.filter(x => x.bought ==false);
         this.total = this.data.map(x => x.pedido.price * x.cantidad).reduce((a,b) => a+b);
       }
-
     })
-    this.userService.isLoggedIn().then(data => {
-      console.log(data);
-      if(data != null && data != undefined){
-        this.isLogged = true;
+    
+    this.firedatabase.database.ref('ticket').on('value', data =>{
+      
+      if(data.exists()){
+      if(this.ticketOrden != null){
+        this.data.pop();
       }
-      this.buttonmessage = !this.isLogged? "Accede para confirmar tu orden" : "Realizar pago";
-     });
+        this.ticket = data.val();
+        this.ticketOrden = {
+          pedido:data.val(),
+          cantidad:data.val().cantidad,
+          bought:data.val().bought,
+          paymentType: data.val().paymentType
+        }
+        this.cantidad = data.val().cantidad;
+        this.data.push(this.ticketOrden);
+        this.total = this.data.map(x => x.pedido.price * x.cantidad).reduce((a,b) => a+b);
+      }
+    })
+    this.fireauth.currentUser.then(data => {
+      console.log(data);
+      if(data){
+        this.uid = data.uid;
+        this.isLogged = true;
+        this.buttonmessage = !this.isLogged? "Accede para confirmar tu orden" : "Realizar pago";
+      }
+    }).catch(error => console.log(error));
+    this.buttonmessage = !this.isLogged? "Accede para confirmar tu orden" : "Realizar pago";
+   
     
  
   }
@@ -65,19 +80,18 @@ export class ConfirmarOrdenPagePage implements OnInit {
       }else{
         this.ticket.bought = true;
         this.pedido.map(x => x.bought = true);
-        this.storage.set("tickets", this.ticket);
-        this.storage.set('pedido', this.pedido);
+        this.firedatabase.database.ref('ticket').set({});
+        this.firedatabase.database.ref('orden').set([]);
+        this.firedatabase.database.ref('users/' + this.uid).child('ticket').set(this.ticket);
+        this.firedatabase.database.ref('users/' + this.uid).child('orden').set(this.pedido);
+
         this.navCtrl.navigateRoot('tabs/tab2');
       }
     }
   }
   showSelectValue(mySelect){
     
-    console.log(mySelect);
     this.cantidad = mySelect;
-    if(this.ticket != null){
-      this.data.pop();
-    }
     this.ticket = {
       id:1,
       displayName: 'Avengers End-Game',
@@ -87,15 +101,8 @@ export class ConfirmarOrdenPagePage implements OnInit {
       cantidad:this.cantidad, 
       bought:false
     }
-    this.storage.set("tickets", this.ticket);
-    
-    
-    this.data.push({
-      pedido:this.ticket,
-      cantidad:this.cantidad,
-      bought:false,
-      paymentType: this.paymentType
-    })
+    this.firedatabase.database.ref('ticket').set(this.ticket);
+    this.ticket = null;
     this.total = this.data.map(x => x.pedido.price * x.cantidad).reduce((a,b) => a+b);
    }
    showSelectValue2(mySelect2){
@@ -110,5 +117,5 @@ export class ConfirmarOrdenPagePage implements OnInit {
     });
     toast.present();
   }
-
+ 
 }

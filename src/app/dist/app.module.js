@@ -16,6 +16,7 @@ var app_component_1 = require("./app.component");
 var modal_page_page_1 = require("./modal-page/modal-page.page");
 var auth_1 = require("@angular/fire/auth");
 var fire_1 = require("@angular/fire");
+var database_1 = require("@angular/fire/database");
 var environment_1 = require("src/environments/environment");
 var storage_1 = require("@ionic/storage");
 var AppModule = /** @class */ (function () {
@@ -26,7 +27,7 @@ var AppModule = /** @class */ (function () {
             declarations: [app_component_1.AppComponent, modal_page_page_1.ModalPagePage],
             entryComponents: [modal_page_page_1.ModalPagePage],
             imports: [platform_browser_1.BrowserModule, angular_1.IonicModule.forRoot(), app_routing_module_1.AppRoutingModule, fire_1.AngularFireModule.initializeApp(environment_1.environment.firebaseConfig),
-                auth_1.AngularFireAuthModule, storage_1.IonicStorageModule.forRoot({
+                auth_1.AngularFireAuthModule, database_1.AngularFireDatabaseModule, storage_1.IonicStorageModule.forRoot({
                     name: 'cinemappdb',
                     driverOrder: ['indexeddb', 'sqlite', 'websql']
                 })],

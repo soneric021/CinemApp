@@ -46,11 +46,12 @@ exports.ModalPagePage = void 0;
 var core_1 = require("@angular/core");
 var Interfaces_1 = require("../models/Interfaces");
 var ModalPagePage = /** @class */ (function () {
-    function ModalPagePage(navCtrl, storage, modalCtrl, toastController) {
+    function ModalPagePage(navCtrl, storage, modalCtrl, toastController, firebaseDatabase) {
         this.navCtrl = navCtrl;
         this.storage = storage;
         this.modalCtrl = modalCtrl;
         this.toastController = toastController;
+        this.firebaseDatabase = firebaseDatabase;
         this.pedido = null;
         this.cantidad = null;
         this.data = [];
@@ -58,17 +59,24 @@ var ModalPagePage = /** @class */ (function () {
         this.datashowed = [];
     }
     ModalPagePage.prototype.ngOnInit = function () {
+        // this.storage.get("pedido").then(val => {
+        //   if(val == null || val == undefined){
         var _a, _b;
         var _this = this;
-        this.storage.get("pedido").then(function (val) {
-            if (val == null || val == undefined) {
+        //   } else{
+        //     this.dataselected = val;
+        //     console.log(this.dataselected);
+        //     this.datashowed = this.dataselected.filter(x => x.bought == false);
+        //     console.log(this.datashowed);
+        //   }
+        // });
+        this.firebaseDatabase.database.ref('orden').on('value', function (val) {
+            if (!val.exists()) {
                 _this.dataselected = [];
             }
             else {
-                _this.dataselected = val;
-                console.log(_this.dataselected);
+                _this.dataselected = val.val();
                 _this.datashowed = _this.dataselected.filter(function (x) { return x.bought == false; });
-                console.log(_this.datashowed);
             }
         });
         if (this.modo == 1) {
@@ -85,7 +93,8 @@ var ModalPagePage = /** @class */ (function () {
                 cantidad: this.cantidad,
                 bought: false
             });
-            this.storage.set("pedido", this.dataselected);
+            //this.storage.set("pedido", this.dataselected);
+            this.firebaseDatabase.database.ref('orden').set(this.dataselected);
             this.datashowed = this.dataselected.filter(function (x) { return x.bought == false; });
             console.log(this.data);
             console.log(this.dataselected);
@@ -109,7 +118,8 @@ var ModalPagePage = /** @class */ (function () {
     ModalPagePage.prototype.deleteItem = function (value) {
         this.datashowed = this.arrayRemove(this.datashowed, value);
         this.dataselected = this.arrayRemove(this.dataselected, value);
-        this.storage.set("pedido", this.dataselected);
+        this.firebaseDatabase.database.ref('orden').set(this.dataselected);
+        //this.storage.set("pedido", this.dataselected);
     };
     ModalPagePage.prototype.dismiss = function () {
         // using the injected ModalController this page
